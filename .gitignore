@@ -10,3 +10,5 @@ cmake-build-remote-debug/
 .DS_Store
 
 *.png
+
+project5.dSYM/

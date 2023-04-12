@@ -51,7 +51,7 @@ Relation Interpreter::evaluateQuery(const Predicate& predicate) {
 }
 
 void Interpreter::evaluateAllQueries() {
-    cout << "Query Evaluation" << endl;
+    cout << endl << "Query Evaluation" << endl;
     for (const auto& query : dl.getQueryList()) {
         evaluateQuery(query);
     }
@@ -166,6 +166,28 @@ void Interpreter::evaluateAllRules() {
 
         bool changed = true;
         int iteration = 0;
+
+        if (rules.size() == 1) {
+            Rule& rule = rules.at(0);
+            // Check if rule doesn't depend on itself
+            bool dependent = false;
+            for (const auto& p : rule.body) {
+                if (p.name == rule.head.name) {
+                    dependent = true;
+                    changed = true;
+                    break;
+                }
+            }
+            if (!dependent) {
+                cout << rule.toString() << endl;
+                Relation result = evaluateRule(rule);
+                cout << result.toString();
+
+                changed = false;
+                iteration = 1;
+            }
+        }
+
         while (changed) {
             changed = false;
             for (const auto& rule : rules) {
@@ -179,7 +201,8 @@ void Interpreter::evaluateAllRules() {
             }
             ++iteration;
         }
-        cout << endl << "Schemes populated after " << iteration << " passes through the Rules." << endl << endl;
+        cout << iteration << " passes: R" << ruleNum << endl;
+//        cout << endl << "Schemes populated after " << iteration << " passes through the Rules." << endl << endl;
 
     }
 
