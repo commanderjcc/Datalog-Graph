@@ -143,40 +143,50 @@ Relation Interpreter::evaluate(const Predicate &predicate) {
 }
 
 void Interpreter::evaluateAllRules() {
-    cout << "Rule Evaluation" << endl;
 
+    cout << "Dependency Graph" << endl;
     pair<Graph,Graph> graphs = makeGraph(dl.getRuleList());
     Graph forwardGraph = graphs.first;
+    cout << forwardGraph.toString() << endl;
     Graph reverseGraph = graphs.second;
 
-    vector<int> order;
-    for (int i = 0; i < forwardGraph.nodes.size(); i++) {
-        order.push_back(i);
-    }
+    cout << "Rule Evaluation" << endl;
+    vector<int> order = reverseGraph.getPostOrder();
+    std::reverse(order.begin(), order.end());
+    vector<Graph> SCCs = forwardGraph.DFSforest(order);
 
-    vector<Graph>
+    for(const auto& SCC : SCCs) {
+        int ruleNum = SCC.nodes.begin()->first;
+        cout << "SCC: R" << ruleNum << endl;
 
-
-
-
-
-
-    bool changed = true;
-    int iteration = 0;
-    while (changed) {
-        changed = false;
-        for (const auto& rule : dl.getRuleList()) {
-            unsigned int before = db.relations[rule.head.name].getTuples().size();
-            cout << rule.toString() << endl;
-            Relation result = evaluateRule(rule);
-            cout << result.toString();
-            if (before != db.relations[rule.head.name].getTuples().size()) {
-                changed = true;
-            }
+        vector<Rule> rules;
+        for (const auto& [i, node] : SCC.nodes) {
+            rules.push_back(dl.getRuleList().at(i));
         }
-        ++iteration;
+
+        bool changed = true;
+        int iteration = 0;
+        while (changed) {
+            changed = false;
+            for (const auto& rule : rules) {
+                unsigned int before = db.relations[rule.head.name].getTuples().size();
+                cout << rule.toString() << endl;
+                Relation result = evaluateRule(rule);
+                cout << result.toString();
+                if (before != db.relations[rule.head.name].getTuples().size()) {
+                    changed = true;
+                }
+            }
+            ++iteration;
+        }
+        cout << endl << "Schemes populated after " << iteration << " passes through the Rules." << endl << endl;
+
     }
-    cout << endl << "Schemes populated after " << iteration << " passes through the Rules." << endl << endl;
+
+
+
+
+
 }
 
 pair<Graph,Graph> Interpreter::makeGraph(const vector<Rule> &rules) {

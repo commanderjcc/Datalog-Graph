@@ -32,6 +32,8 @@ public:
 
     vector<Graph> DFSforest(vector<int> order);
 
+    vector<int> getPostOrder();
+
     string toString();
 };
 

@@ -47,9 +47,8 @@ Graph Graph::DFS(int n, vector<int> order) {
                 combinedGraph.nodes.insert(node);
             }
         }
-
-        combinedGraph.nodes.insert({n, currentNode});
     }
+    combinedGraph.nodes.insert({n, currentNode});
 
     postOrderStack.push_back(n);
     combinedGraph.postOrderStack = this->postOrderStack;
@@ -58,20 +57,30 @@ Graph Graph::DFS(int n, vector<int> order) {
 
 vector<Graph> Graph::DFSforest(vector<int> order) {
     vector<Graph> components;
+    int c = 0;
     while (!order.empty()) {
         int start = order.front();
         order.erase(order.begin());
         Graph component = DFS(start, order);
         components.push_back(component);
-        for (int i = 0; i < order.size(); i++) {
-            if (component.nodes.count(order[i])) {
-                order.erase(order.begin() + i);
-                i--;
+        for (const auto &i : order) {
+            if (component.nodes.count(i)) {
+                order.erase(find(order.begin(), order.end(), i));
             }
         }
+        c = c + 1;
     }
 
+    return components;
+}
 
+vector<int> Graph::getPostOrder() {
+    vector<int> order;
+    for (int i = 0; i < nodes.size(); i++) {
+        order.push_back(i);
+    }
 
-    return vector<Graph>();
+    vector<Graph> components = DFSforest(order);
+
+    return components.back().postOrderStack;
 }
