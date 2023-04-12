@@ -1,0 +1,12 @@
+Dependency Graph
+R0:
+
+Rule Evaluation
+SCC: R0
+jim(x) :- bob(x).
+  x='1'
+1 passes: R0
+
+Query Evaluation
+bob(x)? Yes(1)
+  x='1'

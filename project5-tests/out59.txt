@@ -1,0 +1,51 @@
+Dependency Graph
+R0:R1
+R1:R2
+R2:R3
+R3:R4
+R4:R5
+R5:R6
+R6:R7
+R7:R8
+R8:
+
+Rule Evaluation
+SCC: R8
+b(x) :- a(x).
+  x='a'
+1 passes: R8
+SCC: R7
+c(x) :- b(x).
+  x='a'
+1 passes: R7
+SCC: R6
+d(x) :- c(x).
+  x='a'
+1 passes: R6
+SCC: R5
+e(x) :- d(x).
+  x='a'
+1 passes: R5
+SCC: R4
+f(x) :- e(x).
+  x='a'
+1 passes: R4
+SCC: R3
+g(x) :- f(x).
+  x='a'
+1 passes: R3
+SCC: R2
+h(x) :- g(x).
+  x='a'
+1 passes: R2
+SCC: R1
+i(x) :- h(x).
+  x='a'
+1 passes: R1
+SCC: R0
+j(x) :- i(x).
+  x='a'
+1 passes: R0
+
+Query Evaluation
+j('a')? Yes(1)

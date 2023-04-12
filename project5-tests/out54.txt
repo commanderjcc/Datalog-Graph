@@ -1,0 +1,19 @@
+Dependency Graph
+R0:
+R1:
+
+Rule Evaluation
+SCC: R1
+bob(x) :- joe(x).
+  x='4'
+1 passes: R1
+SCC: R0
+bob(x) :- jim(x).
+  x='2'
+1 passes: R0
+
+Query Evaluation
+bob(x)? Yes(3)
+  x='1'
+  x='2'
+  x='4'

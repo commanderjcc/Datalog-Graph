@@ -1,0 +1,7 @@
+Dependency Graph
+
+Rule Evaluation
+
+Query Evaluation
+bob(x)? Yes(1)
+  x='1'

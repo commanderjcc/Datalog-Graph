@@ -1,0 +1,21 @@
+Dependency Graph
+R0:R0,R1
+R1:R2
+R2:R0,R1
+
+Rule Evaluation
+SCC: R0,R1,R2
+bob(x) :- bob(x).
+bob(x) :- jim(x).
+  x='2'
+jim(x) :- bob(x).
+  x='1'
+bob(x) :- bob(x).
+bob(x) :- jim(x).
+jim(x) :- bob(x).
+2 passes: R0,R1,R2
+
+Query Evaluation
+bob(x)? Yes(2)
+  x='1'
+  x='2'

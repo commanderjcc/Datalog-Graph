@@ -1,0 +1,116 @@
+Dependency Graph
+R0:
+R1:R0,R1
+R2:
+R3:
+R4:
+R5:
+R6:
+
+Rule Evaluation
+SCC: R6
+Students(C,R,N,G) :- snap(S,N,A,P),csg(C,S,G),cr(C,R).
+  C='CS101', R='Turing Aud.', N='C. Brown', G='A'
+  C='CS101', R='Turing Aud.', N='L. Van Pelt', G='B'
+  C='CS101', R='Turing Aud.', N='Snoopy', G='A-'
+  C='EE200', R='25 Ohm Hall', N='C. Brown', G='C'
+  C='EE200', R='25 Ohm Hall', N='P. Patty', G='B+'
+  C='EE200', R='25 Ohm Hall', N='Snoopy', G='B'
+  C='PH100', R='Newton Lab.', N='L. Van Pelt', G='C+'
+1 passes: R6
+SCC: R5
+Grades(N,C,G) :- snap(S,N,A,P),csg(C,S,G).
+  N='C. Brown', C='CS101', G='A'
+  N='C. Brown', C='EE200', G='C'
+  N='L. Van Pelt', C='CS101', G='B'
+  N='L. Van Pelt', C='PH100', G='C+'
+  N='P. Patty', C='EE200', G='B+'
+  N='Snoopy', C='CS101', G='A-'
+  N='Snoopy', C='EE200', G='B'
+1 passes: R5
+SCC: R4
+Schedule(N,C,R,D,H) :- snap(S,N,A,P),csg(C,S,G),cr(C,R),cdh(C,D,H).
+  N='C. Brown', C='CS101', R='Turing Aud.', D='Tu', H='10AM'
+  N='C. Brown', C='EE200', R='25 Ohm Hall', D='F', H='10AM'
+  N='C. Brown', C='EE200', R='25 Ohm Hall', D='M', H='10AM'
+  N='C. Brown', C='EE200', R='25 Ohm Hall', D='W', H='1PM'
+  N='L. Van Pelt', C='CS101', R='Turing Aud.', D='Tu', H='10AM'
+  N='L. Van Pelt', C='PH100', R='Newton Lab.', D='Th', H='11AM'
+  N='P. Patty', C='EE200', R='25 Ohm Hall', D='F', H='10AM'
+  N='P. Patty', C='EE200', R='25 Ohm Hall', D='M', H='10AM'
+  N='P. Patty', C='EE200', R='25 Ohm Hall', D='W', H='1PM'
+  N='Snoopy', C='CS101', R='Turing Aud.', D='Tu', H='10AM'
+  N='Snoopy', C='EE200', R='25 Ohm Hall', D='F', H='10AM'
+  N='Snoopy', C='EE200', R='25 Ohm Hall', D='M', H='10AM'
+  N='Snoopy', C='EE200', R='25 Ohm Hall', D='W', H='1PM'
+1 passes: R4
+SCC: R3
+tthCourses(C) :- cdh(C,'Th',H).
+  C='PH100'
+1 passes: R3
+SCC: R2
+tthCourses(C) :- cdh(C,'Tu',H).
+  C='CS101'
+1 passes: R2
+SCC: R0
+before(C1,C2) :- cp(C2,C1).
+  C1='CS100', C2='CS101'
+  C1='CS100', C2='EE200'
+  C1='CS101', C2='CS120'
+  C1='CS101', C2='CS205'
+  C1='CS120', C2='CS121'
+  C1='CS121', C2='CS206'
+  C1='CS205', C2='CS206'
+  C1='EE005', C2='EE200'
+1 passes: R0
+SCC: R1
+before(C1,C2) :- cp(C3,C1),before(C3,C2).
+  C1='CS100', C2='CS120'
+  C1='CS100', C2='CS205'
+  C1='CS101', C2='CS121'
+  C1='CS101', C2='CS206'
+  C1='CS120', C2='CS206'
+before(C1,C2) :- cp(C3,C1),before(C3,C2).
+  C1='CS100', C2='CS121'
+  C1='CS100', C2='CS206'
+before(C1,C2) :- cp(C3,C1),before(C3,C2).
+3 passes: R1
+
+Query Evaluation
+snap(Id,'Snoopy',A,P)? Yes(1)
+  Id='33333', A='12 Apple St.', P='555-1234'
+csg(Course,'33333',Grade)? Yes(2)
+  Course='CS101', Grade='A-'
+  Course='EE200', Grade='B'
+cp(Course,'CS100')? Yes(2)
+  Course='CS101'
+  Course='EE200'
+cdh('EE200',Day,Hour)? Yes(3)
+  Day='F', Hour='10AM'
+  Day='M', Hour='10AM'
+  Day='W', Hour='1PM'
+cr('CS101',Room)? Yes(1)
+  Room='Turing Aud.'
+tthCourses(C)? Yes(2)
+  C='CS101'
+  C='PH100'
+before('CS100','CS206')? Yes(1)
+before('CS100',prerequisiteTo)? Yes(6)
+  prerequisiteTo='CS101'
+  prerequisiteTo='CS120'
+  prerequisiteTo='CS121'
+  prerequisiteTo='CS205'
+  prerequisiteTo='CS206'
+  prerequisiteTo='EE200'
+Schedule('Snoopy',C,R,D,H)? Yes(4)
+  C='CS101', R='Turing Aud.', D='Tu', H='10AM'
+  C='EE200', R='25 Ohm Hall', D='F', H='10AM'
+  C='EE200', R='25 Ohm Hall', D='M', H='10AM'
+  C='EE200', R='25 Ohm Hall', D='W', H='1PM'
+Grades('Snoopy',C,G)? Yes(2)
+  C='CS101', G='A-'
+  C='EE200', G='B'
+Students('CS101',R,N,G)? Yes(3)
+  R='Turing Aud.', N='C. Brown', G='A'
+  R='Turing Aud.', N='L. Van Pelt', G='B'
+  R='Turing Aud.', N='Snoopy', G='A-'
