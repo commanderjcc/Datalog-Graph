@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 #include <stack>
+#include <vector>
 
 using namespace std;
 
@@ -35,6 +36,8 @@ public:
     vector<int> getPostOrder();
 
     string toString();
+
+    string nodesToString();
 };
 
 

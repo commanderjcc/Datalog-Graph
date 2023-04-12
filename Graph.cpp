@@ -5,6 +5,7 @@
 #include "Graph.h"
 #include <sstream>
 
+
 string Graph::toString() {
     stringstream ss;
     for (auto& pair: nodes) {
@@ -13,7 +14,6 @@ string Graph::toString() {
 
         ss << "R" << nodeID << ":" << node.toString() << endl;
     }
-
 
     return ss.str();
 }
@@ -63,9 +63,10 @@ vector<Graph> Graph::DFSforest(vector<int> order) {
         order.erase(order.begin());
         Graph component = DFS(start, order);
         components.push_back(component);
-        for (const auto &i : order) {
-            if (component.nodes.count(i)) {
-                order.erase(find(order.begin(), order.end(), i));
+        for (auto it = order.begin(); it != order.end(); it++) {
+            if (component.nodes.count(*it)) {
+                order.erase(it);
+                it--;
             }
         }
         c = c + 1;
@@ -76,11 +77,27 @@ vector<Graph> Graph::DFSforest(vector<int> order) {
 
 vector<int> Graph::getPostOrder() {
     vector<int> order;
-    for (int i = 0; i < nodes.size(); i++) {
-        order.push_back(i);
+    for (unsigned int i = 0; i < nodes.size(); i++) {
+        order.push_back(int(i));
     }
 
     vector<Graph> components = DFSforest(order);
 
     return components.back().postOrderStack;
+}
+
+string Graph::nodesToString() {
+    stringstream out;
+    for (const auto& pair: nodes) {
+        int nodeID = pair.first;
+        Node node = pair.second;
+
+        if (nodeID != nodes.rbegin()->first) {
+            out << "R" << nodeID << ",";
+        } else {
+            out << "R" << nodeID;
+        }
+    }
+
+    return out.str();
 }

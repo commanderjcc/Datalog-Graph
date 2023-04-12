@@ -5,6 +5,7 @@
 #include <map>
 #include <iostream>
 #include "Interpreter.h"
+#include <algorithm>
 
 Relation Interpreter::evaluateQuery(const Predicate& predicate) {
     Relation rel = db.relations[predicate.name];
@@ -145,6 +146,13 @@ Relation Interpreter::evaluate(const Predicate &predicate) {
 void Interpreter::evaluateAllRules() {
 
     cout << "Dependency Graph" << endl;
+
+    if (dl.getRuleList().empty()) {
+        cout << endl << "Rule Evaluation" << endl;
+        // No rules to evaluate
+        return;
+    }
+
     pair<Graph,Graph> graphs = makeGraph(dl.getRuleList());
     Graph forwardGraph = graphs.first;
     cout << forwardGraph.toString() << endl;
@@ -155,9 +163,9 @@ void Interpreter::evaluateAllRules() {
     std::reverse(order.begin(), order.end());
     vector<Graph> SCCs = forwardGraph.DFSforest(order);
 
-    for(const auto& SCC : SCCs) {
-        int ruleNum = SCC.nodes.begin()->first;
-        cout << "SCC: R" << ruleNum << endl;
+    for(auto& SCC : SCCs) {
+        string ruleNum = SCC.nodesToString();
+        cout << "SCC: " << ruleNum << endl;
 
         vector<Rule> rules;
         for (const auto& [i, node] : SCC.nodes) {
@@ -201,7 +209,7 @@ void Interpreter::evaluateAllRules() {
             }
             ++iteration;
         }
-        cout << iteration << " passes: R" << ruleNum << endl;
+        cout << iteration << " passes: " << ruleNum << endl;
 //        cout << endl << "Schemes populated after " << iteration << " passes through the Rules." << endl << endl;
 
     }
